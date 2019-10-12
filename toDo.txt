@@ -1,5 +1,29 @@
+SYMFONY PROJECT INSTALL ;;;...
+
 symfony project to do =>
 - first install symfony by symfony new project-name --full for full app or symfony new project-name for little app;
 - then install server so u will not need to reinstall again when your app will be in product..
-- now u can start ur app via symfony server:start
+- now u can start ur app via symfony server:start;
+
+DONE .....................
+
+DOCTRINE ;;
+
+as long as we are working on the project dynamic, well i am going to start with th database configurations
+
+- so, first to work on the database, will start installing doctrine
+- start with => composer require symfony/orm-pack  /then/ => composer require --dev symfony/maker-bundle to install doctrine ...
+- go the .env file on the symfony project that u have created and set the database connections ..
+- now run =>  php bin/console doctrine:database:create and let the rest to doctrine to create the database
+- ok, start to connect to the database name with ur phpstorm
+
+
+DONE ............................
+
+APP MANAGEMENT WITH CONTROLLER ...
+
+
+ok, now start to make controller to mange display ...
+
+- create a controller by php bin/console make:controller
 -
