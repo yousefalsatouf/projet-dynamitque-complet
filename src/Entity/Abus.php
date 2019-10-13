@@ -17,27 +17,22 @@ class Abus
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $enCodage;
+    private $encodage;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $identifiant;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Internaute", inversedBy="abuses")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Internaute", inversedBy="abus")
      */
     private $internaute;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Commentaire", inversedBy="abuses")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Commentaire", inversedBy="abus")
      */
     private $commentaire;
 
@@ -58,26 +53,14 @@ class Abus
         return $this;
     }
 
-    public function getEnCodage(): ?\DateTimeInterface
+    public function getEncodage(): ?\DateTimeInterface
     {
-        return $this->enCodage;
+        return $this->encodage;
     }
 
-    public function setEnCodage(?\DateTimeInterface $enCodage): self
+    public function setEncodage(?\DateTimeInterface $encodage): self
     {
-        $this->enCodage = $enCodage;
-
-        return $this;
-    }
-
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
+        $this->encodage = $encodage;
 
         return $this;
     }

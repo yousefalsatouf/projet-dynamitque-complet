@@ -6,99 +6,92 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"internaute" = "Internaute", "prestataire" = "Prestataire"})
  */
-class Utilisateur
+abstract class Utilisateur
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $adresseN°;
+    protected $adresseNbr;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $adresseRue;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $banni;
-
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $email;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $identifiant;
+    protected $adresseRue;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $inscriptionConf;
+    protected $banni;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $email;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $inscriptionConf;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $inscription;
+    protected $inscription;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $motDePass;
+    protected $motDePasse;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbEssaisInfr;
+    protected $nbEssaisInfructueux;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $typeUtilisateur;
+    protected $typeUtilisateur;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\CodePostal", inversedBy="utilisateurs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\CodePostal")
      */
-    private $codePostalId;
+    protected $codePostal;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Commune", inversedBy="utilisateurs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Localite")
      */
-    private $communeId;
+    protected $localite;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Internaute", inversedBy="utilisateurs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Commune")
      */
-    private $internauteId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Localite", inversedBy="utilisateurs")
-     */
-    private $localiteId;
+    protected $commune;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getAdresseN°(): ?int
+    public function getAdresseNbr(): ?string
     {
-        return $this->adresseN°;
+        return $this->adresseNbr;
     }
 
-    public function setAdresseN°(?int $adresseN°): self
+    public function setAdresseNbr(?string $adresseNbr): self
     {
-        $this->adresseN° = $adresseN°;
+        $this->adresseNbr = $adresseNbr;
 
         return $this;
     }
@@ -127,7 +120,7 @@ class Utilisateur
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmaill(): ?string
     {
         return $this->email;
     }
@@ -135,18 +128,6 @@ class Utilisateur
     public function setEmail(?string $email): self
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
 
         return $this;
     }
@@ -175,26 +156,26 @@ class Utilisateur
         return $this;
     }
 
-    public function getMotDePass(): ?string
+    public function getMotDePasse(): ?string
     {
-        return $this->motDePass;
+        return $this->motDePasse;
     }
 
-    public function setMotDePass(?string $motDePass): self
+    public function setMotDePasse(?string $motDePasse): self
     {
-        $this->motDePass = $motDePass;
+        $this->motDePasse = $motDePasse;
 
         return $this;
     }
 
-    public function getNbEssaisInfr(): ?int
+    public function getNbEssaisInfructueux(): ?int
     {
-        return $this->nbEssaisInfr;
+        return $this->nbEssaisInfructueux;
     }
 
-    public function setNbEssaisInfr(?int $nbEssaisInfr): self
+    public function setNbEssaisInfructueux(?int $nbEssaisInfructueux): self
     {
-        $this->nbEssaisInfr = $nbEssaisInfr;
+        $this->nbEssaisInfructueux = $nbEssaisInfructueux;
 
         return $this;
     }
@@ -211,52 +192,40 @@ class Utilisateur
         return $this;
     }
 
-    public function getCodePostalId(): ?CodePostal
+    public function getCodePostal(): ?CodePostal
     {
-        return $this->codePostalId;
+        return $this->codePostal;
     }
 
-    public function setCodePostalId(?CodePostal $codePostalId): self
+    public function setCodePostal(?CodePostal $codePostal): self
     {
-        $this->codePostalId = $codePostalId;
+        $this->codePostal = $codePostal;
 
         return $this;
     }
 
-    public function getCommuneId(): ?Commune
+    public function getLocalite(): ?Localite
     {
-        return $this->communeId;
+        return $this->localite;
     }
 
-    public function setCommuneId(?Commune $communeId): self
+    public function setLocalite(?Localite $localite): self
     {
-        $this->communeId = $communeId;
+        $this->localite = $localite;
 
         return $this;
     }
 
-    public function getInternauteId(): ?Internaute
+    public function getCommune(): ?Commune
     {
-        return $this->internauteId;
+        return $this->commune;
     }
 
-    public function setInternauteId(?Internaute $internauteId): self
+    public function setCommune(?Commune $commune): self
     {
-        $this->internauteId = $internauteId;
+        $this->commune = $commune;
 
         return $this;
     }
-
-    public function getLocaliteId(): ?Localite
-    {
-        return $this->localiteId;
-    }
-
-    public function setLocaliteId(?Localite $localiteId): self
-    {
-        $this->localiteId = $localiteId;
-
-        return $this;
-    }
-
 }
+

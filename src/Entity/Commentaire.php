@@ -19,7 +19,7 @@ class Commentaire
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $contenu;
 
@@ -31,37 +31,31 @@ class Commentaire
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $identifiant;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
     private $encodage;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $titre;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Prestataire", inversedBy="commentaires")
-     */
-    private $prestataire;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Internaute", inversedBy="commentaires")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Internaute", inversedBy="commentaire")
      */
     private $internaute;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prestataire", inversedBy="commentaire")
+     */
+    private $prestataire;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Abus", mappedBy="commentaire")
      */
-    private $abuses;
+    private $abus;
 
     public function __construct()
     {
-        $this->internaute = new ArrayCollection();
-        $this->abuses = new ArrayCollection();
+        $this->abus = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,24 +87,12 @@ class Commentaire
         return $this;
     }
 
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
-
-        return $this;
-    }
-
-    public function getEncodage(): ?\DateTimeInterface
+    public function getEncodage(): ?int
     {
         return $this->encodage;
     }
 
-    public function setEncodage(?\DateTimeInterface $encodage): self
+    public function setEncodage(?int $encodage): self
     {
         $this->encodage = $encodage;
 
@@ -129,6 +111,18 @@ class Commentaire
         return $this;
     }
 
+    public function getInternaute(): ?Internaute
+    {
+        return $this->internaute;
+    }
+
+    public function setInternaute(?Internaute $internaute): self
+    {
+        $this->internaute = $internaute;
+
+        return $this;
+    }
+
     public function getPrestataire(): ?Prestataire
     {
         return $this->prestataire;
@@ -142,56 +136,30 @@ class Commentaire
     }
 
     /**
-     * @return Collection|Internaute[]
-     */
-    public function getInternaute(): Collection
-    {
-        return $this->internaute;
-    }
-
-    public function addInternaute(Internaute $internaute): self
-    {
-        if (!$this->internaute->contains($internaute)) {
-            $this->internaute[] = $internaute;
-        }
-
-        return $this;
-    }
-
-    public function removeInternaute(Internaute $internaute): self
-    {
-        if ($this->internaute->contains($internaute)) {
-            $this->internaute->removeElement($internaute);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Abus[]
      */
-    public function getAbuses(): Collection
+    public function getAbus(): Collection
     {
-        return $this->abuses;
+        return $this->abus;
     }
 
-    public function addAbuse(Abus $abuse): self
+    public function addAbus(Abus $abus): self
     {
-        if (!$this->abuses->contains($abuse)) {
-            $this->abuses[] = $abuse;
-            $abuse->setCommentaire($this);
+        if (!$this->abus->contains($abus)) {
+            $this->abus[] = $abus;
+            $abus->setCommentaire($this);
         }
 
         return $this;
     }
 
-    public function removeAbuse(Abus $abuse): self
+    public function removeAbus(Abus $abus): self
     {
-        if ($this->abuses->contains($abuse)) {
-            $this->abuses->removeElement($abuse);
+        if ($this->abus->contains($abus)) {
+            $this->abus->removeElement($abus);
             // set the owning side to null (unless already changed)
-            if ($abuse->getCommentaire() === $this) {
-                $abuse->setCommentaire(null);
+            if ($abus->getCommentaire() === $this) {
+                $abus->setCommentaire(null);
             }
         }
 

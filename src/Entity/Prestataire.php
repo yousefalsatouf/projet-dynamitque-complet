@@ -9,86 +9,84 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PrestataireRepository")
  */
-class Prestataire
+class Prestataire extends Utilisateur
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $emailContact;
+    private $eMailContact;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $identifiant;
-
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $numTel;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $numTva;
+    private $numTVA;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $siteInternet;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Stage", mappedBy="prestataire")
+     * @ORM\ManyToMany(targetEntity="App\Entity\CategorieDeServices", inversedBy="prestataires")
      */
-    private $stages;
+    private $categorieDeServices;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Proposer", mappedBy="prestataire")
-     */
-    private $proposers;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Promotion", inversedBy="prestataire")
+     * @ORM\OneToMany(targetEntity="App\Entity\Promotion", mappedBy="prestataire")
      */
     private $promotion;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Utilisateur", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Stage", mappedBy="prestataire")
      */
-    private $utilisateur;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Images", mappedBy="prestataire")
-     */
-    private $images;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Favori", inversedBy="prestataire")
-     */
-    private $favori;
+    private $stage;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Commentaire", mappedBy="prestataire")
      */
-    private $commentaires;
+    private $commentaire;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Images", mappedBy="prestataire")
+     */
+    private $image;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Images", mappedBy="prestatairePhotos")
+     */
+    private $images;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Internaute", inversedBy="prestataires")
+     */
+    private $internaute;
 
     public function __construct()
     {
-        $this->stages = new ArrayCollection();
-        $this->proposers = new ArrayCollection();
+        $this->categorieDeServices = new ArrayCollection();
+        $this->promotion = new ArrayCollection();
+        $this->stage = new ArrayCollection();
+        $this->commentaire = new ArrayCollection();
+        $this->image = new ArrayCollection();
         $this->images = new ArrayCollection();
-        $this->commentaires = new ArrayCollection();
+        $this->internaute = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -96,26 +94,14 @@ class Prestataire
         return $this->id;
     }
 
-    public function getEmailContact(): ?string
+    public function getEMailContact(): ?string
     {
-        return $this->emailContact;
+        return $this->eMailContact;
     }
 
-    public function setEmailContact(?string $emailContact): self
+    public function setEMailContact(?string $eMailContact): self
     {
-        $this->emailContact = $emailContact;
-
-        return $this;
-    }
-
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
+        $this->eMailContact = $eMailContact;
 
         return $this;
     }
@@ -144,14 +130,14 @@ class Prestataire
         return $this;
     }
 
-    public function getNumTva(): ?string
+    public function getNumTVA(): ?string
     {
-        return $this->numTva;
+        return $this->numTVA;
     }
 
-    public function setNumTva(string $numTva): self
+    public function setNumTVA(?string $numTVA): self
     {
-        $this->numTva = $numTva;
+        $this->numTVA = $numTVA;
 
         return $this;
     }
@@ -169,17 +155,74 @@ class Prestataire
     }
 
     /**
+     * @return Collection|CategorieDeServices[]
+     */
+    public function getCategorieDeServices(): Collection
+    {
+        return $this->categorieDeServices;
+    }
+
+    public function addCategorieDeService(CategorieDeServices $categorieDeService): self
+    {
+        if (!$this->categorieDeServices->contains($categorieDeService)) {
+            $this->categorieDeServices[] = $categorieDeService;
+        }
+
+        return $this;
+    }
+
+    public function removeCategorieDeService(CategorieDeServices $categorieDeService): self
+    {
+        if ($this->categorieDeServices->contains($categorieDeService)) {
+            $this->categorieDeServices->removeElement($categorieDeService);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Promotion[]
+     */
+    public function getPromotion(): Collection
+    {
+        return $this->promotion;
+    }
+
+    public function addPromotion(Promotion $promotion): self
+    {
+        if (!$this->promotion->contains($promotion)) {
+            $this->promotion[] = $promotion;
+            $promotion->setPrestataire($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotion(Promotion $promotion): self
+    {
+        if ($this->promotion->contains($promotion)) {
+            $this->promotion->removeElement($promotion);
+            // set the owning side to null (unless already changed)
+            if ($promotion->getPrestataire() === $this) {
+                $promotion->setPrestataire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Stage[]
      */
-    public function getStages(): Collection
+    public function getStage(): Collection
     {
-        return $this->stages;
+        return $this->stage;
     }
 
     public function addStage(Stage $stage): self
     {
-        if (!$this->stages->contains($stage)) {
-            $this->stages[] = $stage;
+        if (!$this->stage->contains($stage)) {
+            $this->stage[] = $stage;
             $stage->setPrestataire($this);
         }
 
@@ -188,8 +231,8 @@ class Prestataire
 
     public function removeStage(Stage $stage): self
     {
-        if ($this->stages->contains($stage)) {
-            $this->stages->removeElement($stage);
+        if ($this->stage->contains($stage)) {
+            $this->stage->removeElement($stage);
             // set the owning side to null (unless already changed)
             if ($stage->getPrestataire() === $this) {
                 $stage->setPrestataire(null);
@@ -200,53 +243,63 @@ class Prestataire
     }
 
     /**
-     * @return Collection|Proposer[]
+     * @return Collection|Commentaire[]
      */
-    public function getProposers(): Collection
+    public function getCommentaire(): Collection
     {
-        return $this->proposers;
+        return $this->commentaire;
     }
 
-    public function addProposer(Proposer $proposer): self
+    public function addCommentaire(Commentaire $commentaire): self
     {
-        if (!$this->proposers->contains($proposer)) {
-            $this->proposers[] = $proposer;
-            $proposer->addPrestataire($this);
+        if (!$this->commentaire->contains($commentaire)) {
+            $this->commentaire[] = $commentaire;
+            $commentaire->setPrestataire($this);
         }
 
         return $this;
     }
 
-    public function removeProposer(Proposer $proposer): self
+    public function removeCommentaire(Commentaire $commentaire): self
     {
-        if ($this->proposers->contains($proposer)) {
-            $this->proposers->removeElement($proposer);
-            $proposer->removePrestataire($this);
+        if ($this->commentaire->contains($commentaire)) {
+            $this->commentaire->removeElement($commentaire);
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getPrestataire() === $this) {
+                $commentaire->setPrestataire(null);
+            }
         }
 
         return $this;
     }
 
-    public function getPromotion(): ?Promotion
+    /**
+     * @return Collection|Images[]
+     */
+    public function getImage(): Collection
     {
-        return $this->promotion;
+        return $this->image;
     }
 
-    public function setPromotion(?Promotion $promotion): self
+    public function addImage(Images $image): self
     {
-        $this->promotion = $promotion;
+        if (!$this->image->contains($image)) {
+            $this->image[] = $image;
+            $image->setPrestataire($this);
+        }
 
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function removeImage(Images $image): self
     {
-        return $this->utilisateur;
-    }
-
-    public function setUtilisateur(?Utilisateur $utilisateur): self
-    {
-        $this->utilisateur = $utilisateur;
+        if ($this->image->contains($image)) {
+            $this->image->removeElement($image);
+            // set the owning side to null (unless already changed)
+            if ($image->getPrestataire() === $this) {
+                $image->setPrestataire(null);
+            }
+        }
 
         return $this;
     }
@@ -259,67 +312,27 @@ class Prestataire
         return $this->images;
     }
 
-    public function addImage(Images $image): self
-    {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->setPrestataire($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImage(Images $image): self
-    {
-        if ($this->images->contains($image)) {
-            $this->images->removeElement($image);
-            // set the owning side to null (unless already changed)
-            if ($image->getPrestataire() === $this) {
-                $image->setPrestataire(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getFavori(): ?Favori
-    {
-        return $this->favori;
-    }
-
-    public function setFavori(?Favori $favori): self
-    {
-        $this->favori = $favori;
-
-        return $this;
-    }
-
     /**
-     * @return Collection|Commentaire[]
+     * @return Collection|Internaute[]
      */
-    public function getCommentaires(): Collection
+    public function getInternaute(): Collection
     {
-        return $this->commentaires;
+        return $this->internaute;
     }
 
-    public function addCommentaire(Commentaire $commentaire): self
+    public function addInternaute(Internaute $internaute): self
     {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires[] = $commentaire;
-            $commentaire->setPrestataire($this);
+        if (!$this->internaute->contains($internaute)) {
+            $this->internaute[] = $internaute;
         }
 
         return $this;
     }
 
-    public function removeCommentaire(Commentaire $commentaire): self
+    public function removeInternaute(Internaute $internaute): self
     {
-        if ($this->commentaires->contains($commentaire)) {
-            $this->commentaires->removeElement($commentaire);
-            // set the owning side to null (unless already changed)
-            if ($commentaire->getPrestataire() === $this) {
-                $commentaire->setPrestataire(null);
-            }
+        if ($this->internaute->contains($internaute)) {
+            $this->internaute->removeElement($internaute);
         }
 
         return $this;

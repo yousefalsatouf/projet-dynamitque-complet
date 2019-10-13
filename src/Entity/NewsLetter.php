@@ -17,14 +17,9 @@ class NewsLetter
     private $id;
 
     /**
-     * @ORM\Column(type="blob", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $documentPdf;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $identifiant;
+    private $documentPDF;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -32,7 +27,7 @@ class NewsLetter
     private $publication;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $titre;
 
@@ -41,26 +36,14 @@ class NewsLetter
         return $this->id;
     }
 
-    public function getDocumentPdf()
+    public function getDocumentPDF()
     {
-        return $this->documentPdf;
+        return $this->documentPDF;
     }
 
-    public function setDocumentPdf($documentPdf): self
+    public function setDocumentPDF($documentPDF): self
     {
-        $this->documentPdf = $documentPdf;
-
-        return $this;
-    }
-
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
+        $this->documentPDF = $documentPDF;
 
         return $this;
     }

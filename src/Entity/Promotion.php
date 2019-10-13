@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,14 +32,14 @@ class Promotion
     private $debut;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="blob", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $documentPdf;
+    private $documentPDF;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -49,29 +47,19 @@ class Promotion
     private $fin;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $identifiant;
-
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nom;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\CategorieDeServices", inversedBy="promotions")
-     */
-    private $categorieDeServices;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Prestataire", mappedBy="promotion")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prestataire", inversedBy="promotion")
      */
     private $prestataire;
 
-    public function __construct()
-    {
-        $this->prestataire = new ArrayCollection();
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\CategorieDeServices", inversedBy="promotion")
+     */
+    private $categorieDeServices;
 
     public function getId(): ?int
     {
@@ -126,14 +114,14 @@ class Promotion
         return $this;
     }
 
-    public function getDocumentPdf()
+    public function getDocumentPDF()
     {
-        return $this->documentPdf;
+        return $this->documentPDF;
     }
 
-    public function setDocumentPdf($documentPdf): self
+    public function setDocumentPDF($documentPDF): self
     {
-        $this->documentPdf = $documentPdf;
+        $this->documentPDF = $documentPDF;
 
         return $this;
     }
@@ -150,18 +138,6 @@ class Promotion
         return $this;
     }
 
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
-
-        return $this;
-    }
-
     public function getNom(): ?string
     {
         return $this->nom;
@@ -174,6 +150,18 @@ class Promotion
         return $this;
     }
 
+    public function getPrestataire(): ?Prestataire
+    {
+        return $this->prestataire;
+    }
+
+    public function setPrestataire(?Prestataire $prestataire): self
+    {
+        $this->prestataire = $prestataire;
+
+        return $this;
+    }
+
     public function getCategorieDeServices(): ?CategorieDeServices
     {
         return $this->categorieDeServices;
@@ -182,37 +170,6 @@ class Promotion
     public function setCategorieDeServices(?CategorieDeServices $categorieDeServices): self
     {
         $this->categorieDeServices = $categorieDeServices;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Prestataire[]
-     */
-    public function getPrestataire(): Collection
-    {
-        return $this->prestataire;
-    }
-
-    public function addPrestataire(Prestataire $prestataire): self
-    {
-        if (!$this->prestataire->contains($prestataire)) {
-            $this->prestataire[] = $prestataire;
-            $prestataire->setPromotion($this);
-        }
-
-        return $this;
-    }
-
-    public function removePrestataire(Prestataire $prestataire): self
-    {
-        if ($this->prestataire->contains($prestataire)) {
-            $this->prestataire->removeElement($prestataire);
-            // set the owning side to null (unless already changed)
-            if ($prestataire->getPromotion() === $this) {
-                $prestataire->setPromotion(null);
-            }
-        }
 
         return $this;
     }

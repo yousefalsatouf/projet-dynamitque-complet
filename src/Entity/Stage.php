@@ -32,7 +32,7 @@ class Stage
     private $debut;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
 
@@ -42,27 +42,22 @@ class Stage
     private $fin;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $identifiant;
-
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $infoComplementaire;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $tarif;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Prestataire", inversedBy="stages")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prestataire", inversedBy="stage")
      */
     private $prestataire;
 
@@ -127,18 +122,6 @@ class Stage
     public function setFin(?\DateTimeInterface $fin): self
     {
         $this->fin = $fin;
-
-        return $this;
-    }
-
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
 
         return $this;
     }

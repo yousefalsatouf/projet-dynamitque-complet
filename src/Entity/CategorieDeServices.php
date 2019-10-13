@@ -19,7 +19,7 @@ class CategorieDeServices
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
 
@@ -29,12 +29,7 @@ class CategorieDeServices
     private $enAvant;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $identifiant;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nom;
 
@@ -44,19 +39,19 @@ class CategorieDeServices
     private $valide;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Proposer", mappedBy="catagorieDeServices")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Prestataire", mappedBy="categorieDeServices")
      */
-    private $proposers;
+    private $prestataires;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Promotion", mappedBy="categorieDeServices")
      */
-    private $promotions;
+    private $promotion;
 
     public function __construct()
     {
-        $this->proposers = new ArrayCollection();
-        $this->promotions = new ArrayCollection();
+        $this->prestataires = new ArrayCollection();
+        $this->promotion = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -88,18 +83,6 @@ class CategorieDeServices
         return $this;
     }
 
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
-
-        return $this;
-    }
-
     public function getNom(): ?string
     {
         return $this->nom;
@@ -125,28 +108,28 @@ class CategorieDeServices
     }
 
     /**
-     * @return Collection|Proposer[]
+     * @return Collection|Prestataire[]
      */
-    public function getProposers(): Collection
+    public function getPrestataires(): Collection
     {
-        return $this->proposers;
+        return $this->prestataires;
     }
 
-    public function addProposer(Proposer $proposer): self
+    public function addPrestataire(Prestataire $prestataire): self
     {
-        if (!$this->proposers->contains($proposer)) {
-            $this->proposers[] = $proposer;
-            $proposer->addCatagorieDeService($this);
+        if (!$this->prestataires->contains($prestataire)) {
+            $this->prestataires[] = $prestataire;
+            $prestataire->addCategorieDeService($this);
         }
 
         return $this;
     }
 
-    public function removeProposer(Proposer $proposer): self
+    public function removePrestataire(Prestataire $prestataire): self
     {
-        if ($this->proposers->contains($proposer)) {
-            $this->proposers->removeElement($proposer);
-            $proposer->removeCatagorieDeService($this);
+        if ($this->prestataires->contains($prestataire)) {
+            $this->prestataires->removeElement($prestataire);
+            $prestataire->removeCategorieDeService($this);
         }
 
         return $this;
@@ -155,15 +138,15 @@ class CategorieDeServices
     /**
      * @return Collection|Promotion[]
      */
-    public function getPromotions(): Collection
+    public function getPromotion(): Collection
     {
-        return $this->promotions;
+        return $this->promotion;
     }
 
     public function addPromotion(Promotion $promotion): self
     {
-        if (!$this->promotions->contains($promotion)) {
-            $this->promotions[] = $promotion;
+        if (!$this->promotion->contains($promotion)) {
+            $this->promotion[] = $promotion;
             $promotion->setCategorieDeServices($this);
         }
 
@@ -172,8 +155,8 @@ class CategorieDeServices
 
     public function removePromotion(Promotion $promotion): self
     {
-        if ($this->promotions->contains($promotion)) {
-            $this->promotions->removeElement($promotion);
+        if ($this->promotion->contains($promotion)) {
+            $this->promotion->removeElement($promotion);
             // set the owning side to null (unless already changed)
             if ($promotion->getCategorieDeServices() === $this) {
                 $promotion->setCategorieDeServices(null);

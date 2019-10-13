@@ -24,19 +24,13 @@ class Position
     private $ordre;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Internaute", inversedBy="positions")
+     * @ORM\OneToMany(targetEntity="App\Entity\Bloc", mappedBy="position")
      */
-    private $internaute;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Bloc", inversedBy="positions")
-     */
-    private $block;
+    private $bloc;
 
     public function __construct()
     {
-        $this->internaute = new ArrayCollection();
-        $this->block = new ArrayCollection();
+        $this->bloc = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -57,52 +51,31 @@ class Position
     }
 
     /**
-     * @return Collection|Internaute[]
-     */
-    public function getInternaute(): Collection
-    {
-        return $this->internaute;
-    }
-
-    public function addInternaute(Internaute $internaute): self
-    {
-        if (!$this->internaute->contains($internaute)) {
-            $this->internaute[] = $internaute;
-        }
-
-        return $this;
-    }
-
-    public function removeInternaute(Internaute $internaute): self
-    {
-        if ($this->internaute->contains($internaute)) {
-            $this->internaute->removeElement($internaute);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Bloc[]
      */
-    public function getBlock(): Collection
+    public function getBloc(): Collection
     {
-        return $this->block;
+        return $this->bloc;
     }
 
-    public function addBlock(Bloc $block): self
+    public function addBloc(Bloc $bloc): self
     {
-        if (!$this->block->contains($block)) {
-            $this->block[] = $block;
+        if (!$this->bloc->contains($bloc)) {
+            $this->bloc[] = $bloc;
+            $bloc->setPosition($this);
         }
 
         return $this;
     }
 
-    public function removeBlock(Bloc $block): self
+    public function removeBloc(Bloc $bloc): self
     {
-        if ($this->block->contains($block)) {
-            $this->block->removeElement($block);
+        if ($this->bloc->contains($bloc)) {
+            $this->bloc->removeElement($bloc);
+            // set the owning side to null (unless already changed)
+            if ($bloc->getPosition() === $this) {
+                $bloc->setPosition(null);
+            }
         }
 
         return $this;

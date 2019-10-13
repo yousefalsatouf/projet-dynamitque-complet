@@ -9,19 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\InternauteRepository")
  */
-class Internaute
+class Internaute extends Utilisateur
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $identifiant;
+    protected $id;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -29,69 +24,50 @@ class Internaute
     private $newsLetter;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $prenom;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Utilisateur", mappedBy="internauteId")
+     * @ORM\OneToOne(targetEntity="App\Entity\Images", cascade={"persist", "remove"})
      */
-    private $utilisateurs;
+    private $image;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Position", mappedBy="internaute")
+     * @ORM\OneToMany(targetEntity="App\Entity\Commentaire", mappedBy="internaute")
      */
-    private $positions;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Images", mappedBy="internaute")
-     */
-    private $images;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Favori", inversedBy="internaute")
-     */
-    private $favori;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Commentaire", mappedBy="internaute")
-     */
-    private $commentaires;
+    private $commentaire;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Abus", mappedBy="internaute")
      */
-    private $abuses;
+    private $abus;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Position")
+     */
+    private $position;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Prestataire", mappedBy="internaute")
+     */
+    private $prestataires;
 
     public function __construct()
     {
-        $this->utilisateurs = new ArrayCollection();
-        $this->positions = new ArrayCollection();
-        $this->images = new ArrayCollection();
-        $this->commentaires = new ArrayCollection();
-        $this->abuses = new ArrayCollection();
+        $this->commentaire = new ArrayCollection();
+        $this->abus = new ArrayCollection();
+        $this->prestataires = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
-
-        return $this;
     }
 
     public function getNewsLetter(): ?bool
@@ -130,101 +106,14 @@ class Internaute
         return $this;
     }
 
-    /**
-     * @return Collection|Utilisateur[]
-     */
-    public function getUtilisateurs(): Collection
+    public function getImage(): ?Images
     {
-        return $this->utilisateurs;
+        return $this->image;
     }
 
-    public function addUtilisateur(Utilisateur $utilisateur): self
+    public function setImage(?Images $image): self
     {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs[] = $utilisateur;
-            $utilisateur->setInternauteId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateur $utilisateur): self
-    {
-        if ($this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs->removeElement($utilisateur);
-            // set the owning side to null (unless already changed)
-            if ($utilisateur->getInternauteId() === $this) {
-                $utilisateur->setInternauteId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Position[]
-     */
-    public function getPositions(): Collection
-    {
-        return $this->positions;
-    }
-
-    public function addPosition(Position $position): self
-    {
-        if (!$this->positions->contains($position)) {
-            $this->positions[] = $position;
-            $position->addInternaute($this);
-        }
-
-        return $this;
-    }
-
-    public function removePosition(Position $position): self
-    {
-        if ($this->positions->contains($position)) {
-            $this->positions->removeElement($position);
-            $position->removeInternaute($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Images[]
-     */
-    public function getImages(): Collection
-    {
-        return $this->images;
-    }
-
-    public function addImage(Images $image): self
-    {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->addInternaute($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImage(Images $image): self
-    {
-        if ($this->images->contains($image)) {
-            $this->images->removeElement($image);
-            $image->removeInternaute($this);
-        }
-
-        return $this;
-    }
-
-    public function getFavori(): ?Favori
-    {
-        return $this->favori;
-    }
-
-    public function setFavori(?Favori $favori): self
-    {
-        $this->favori = $favori;
+        $this->image = $image;
 
         return $this;
     }
@@ -232,16 +121,16 @@ class Internaute
     /**
      * @return Collection|Commentaire[]
      */
-    public function getCommentaires(): Collection
+    public function getCommentaire(): Collection
     {
-        return $this->commentaires;
+        return $this->commentaire;
     }
 
     public function addCommentaire(Commentaire $commentaire): self
     {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires[] = $commentaire;
-            $commentaire->addInternaute($this);
+        if (!$this->commentaire->contains($commentaire)) {
+            $this->commentaire[] = $commentaire;
+            $commentaire->setInternaute($this);
         }
 
         return $this;
@@ -249,9 +138,12 @@ class Internaute
 
     public function removeCommentaire(Commentaire $commentaire): self
     {
-        if ($this->commentaires->contains($commentaire)) {
-            $this->commentaires->removeElement($commentaire);
-            $commentaire->removeInternaute($this);
+        if ($this->commentaire->contains($commentaire)) {
+            $this->commentaire->removeElement($commentaire);
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getInternaute() === $this) {
+                $commentaire->setInternaute(null);
+            }
         }
 
         return $this;
@@ -260,29 +152,69 @@ class Internaute
     /**
      * @return Collection|Abus[]
      */
-    public function getAbuses(): Collection
+    public function getAbus(): Collection
     {
-        return $this->abuses;
+        return $this->abus;
     }
 
-    public function addAbuse(Abus $abuse): self
+    public function addAbus(Abus $abus): self
     {
-        if (!$this->abuses->contains($abuse)) {
-            $this->abuses[] = $abuse;
-            $abuse->setInternaute($this);
+        if (!$this->abus->contains($abus)) {
+            $this->abus[] = $abus;
+            $abus->setInternaute($this);
         }
 
         return $this;
     }
 
-    public function removeAbuse(Abus $abuse): self
+    public function removeAbus(Abus $abus): self
     {
-        if ($this->abuses->contains($abuse)) {
-            $this->abuses->removeElement($abuse);
+        if ($this->abus->contains($abus)) {
+            $this->abus->removeElement($abus);
             // set the owning side to null (unless already changed)
-            if ($abuse->getInternaute() === $this) {
-                $abuse->setInternaute(null);
+            if ($abus->getInternaute() === $this) {
+                $abus->setInternaute(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getPosition(): ?Position
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?Position $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Prestataire[]
+     */
+    public function getPrestataires(): Collection
+    {
+        return $this->prestataires;
+    }
+
+    public function addPrestataire(Prestataire $prestataire): self
+    {
+        if (!$this->prestataires->contains($prestataire)) {
+            $this->prestataires[] = $prestataire;
+            $prestataire->addInternaute($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestataire(Prestataire $prestataire): self
+    {
+        if ($this->prestataires->contains($prestataire)) {
+            $this->prestataires->removeElement($prestataire);
+            $prestataire->removeInternaute($this);
         }
 
         return $this;

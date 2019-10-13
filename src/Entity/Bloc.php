@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,30 +17,19 @@ class Bloc
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $identifiant;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nom;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Position", mappedBy="block")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Position", inversedBy="bloc")
      */
-    private $positions;
-
-    public function __construct()
-    {
-        $this->positions = new ArrayCollection();
-    }
-    
+    private $position;
 
     public function getId(): ?int
     {
@@ -61,18 +48,6 @@ class Bloc
         return $this;
     }
 
-    public function getIdentifiant(): ?int
-    {
-        return $this->identifiant;
-    }
-
-    public function setIdentifiant(?int $identifiant): self
-    {
-        $this->identifiant = $identifiant;
-
-        return $this;
-    }
-
     public function getNom(): ?string
     {
         return $this->nom;
@@ -85,30 +60,14 @@ class Bloc
         return $this;
     }
 
-    /**
-     * @return Collection|Position[]
-     */
-    public function getPositions(): Collection
+    public function getPosition(): ?Position
     {
-        return $this->positions;
+        return $this->position;
     }
 
-    public function addPosition(Position $position): self
+    public function setPosition(?Position $position): self
     {
-        if (!$this->positions->contains($position)) {
-            $this->positions[] = $position;
-            $position->addBlock($this);
-        }
-
-        return $this;
-    }
-
-    public function removePosition(Position $position): self
-    {
-        if ($this->positions->contains($position)) {
-            $this->positions->removeElement($position);
-            $position->removeBlock($this);
-        }
+        $this->position = $position;
 
         return $this;
     }
