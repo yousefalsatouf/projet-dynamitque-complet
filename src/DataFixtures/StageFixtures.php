@@ -9,26 +9,27 @@ use Faker;
 
 class StageFixtures extends Fixture
 {
+    public const NBR_STAGE = 10;
+
     public function load(ObjectManager $manager)
     {
         $faker = Faker\Factory::create();
 
-       /* for ($s=1; $s<=3; $s++)
+        for ($s=1; $s<= self::NBR_STAGE; $s++)
         {
-            $user = new Stage();
-            $user->setAffichageDe($faker->date)
-                ->setAffichageA($faker->dateTime)
-                ->setDebut($faker->dateTime)
-                ->setDescription($faker->sentence(5))
-                ->setFin($faker->dateTime)
-                ->setIdentifiant($faker->numberBetween(1, 500))
-                ->setInfoComplementaire($faker->sentence(3))
-                ->setNom($faker->name)
-                ->setTarif($faker->words);
+            $stag = new Stage();
+            $stag->setAffichageDe($faker->dateTime('now'))
+                 ->setAffichageA($faker->dateTimeThisDecade('+7 months'))
+                 ->setDebut($faker->dateTime('now'))
+                 ->setDescription($faker->text)
+                 ->setFin($faker->dateTimeThisDecade('+10 months'))
+                 ->setInfoComplementaire($faker->sentence(10))
+                 ->setNom($faker->company)
+                 ->setTarif($faker->numberBetween(10, 300));
 
-            $manager->persist($user);
+            $manager->persist($stag);
 
         }
-        $manager->flush();*/
+        $manager->flush();
     }
 }

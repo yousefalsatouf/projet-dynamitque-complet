@@ -13,22 +13,21 @@ class PromotionFixtures extends Fixture
     {
         $faker = Faker\Factory::create();
 
-       /* for ($p=1; $p<=3; $p++)
+        for ($p=1; $p<=10; $p++)
         {
-            $user = new Promotion();
-            $user->setAffichageDe($faker->date)
-                ->setAffichageA($faker->dateTime)
-                ->setDebut($faker->dateTime)
+            $prom = new Promotion();
+            $prom->setAffichageDe($faker->dateTime('now'))
+                ->setAffichageA($faker->dateTimeThisDecade('+7 months'))
+                ->setDebut($faker->dateTime('now'))
                 ->setDescription($faker->sentence(5))
-                ->setDocumentPdf($faker->file)
-                ->setFin($faker->dateTime)
-                ->setIdentifiant($faker->numberBetween(1, 500))
-                ->setInfoComplementaire($faker->sentence(3))
-                ->setNom($faker->name);
+                ->setDocumentPdf($faker->fileExtension)
+                ->setFin($faker->dateTimeThisDecade('+7 months'))
+                ->setNom($faker->word);
 
-            $manager->persist($user);
+            $manager->persist($prom);
 
         }
-        $manager->flush();*/
+        $manager->flush();
     }
+
 }
