@@ -23,9 +23,9 @@ class InternauteFixtures extends Fixture implements DependentFixtureInterface
                   ->setAdresseNbr($faker->buildingNumber)
                   ->setAdresseRue($faker->streetName)
                   ->setEmail($inter->getNom()."@gmail.com")
-                  ->setLocalite($this->getReference(LocaliteFixtures::AREA_REF.$faker->numberBetween(0, localiteFixtures::NBR_AREA)))
-                  ->setCodePostal($this->getReference(CodePostalFixtures::CP_REF.$faker->numberBetween(0, codePostalFixtures::NBR_CP)))
-                  ->setCommune($this->getReference(CommuneFixtures::TOWN_REF.$faker->numberBetween(0, CommuneFixtures::NBR_TOWN)));
+                  ->setLocalite($this->getReference(LocaliteFixtures::AREA_REF.$faker->numberBetween(1, localiteFixtures::NBR_AREA)))
+                  ->setCodePostal($this->getReference(CodePostalFixtures::CP_REF.$faker->numberBetween(1, codePostalFixtures::NBR_CP)))
+                  ->setCommune($this->getReference(CommuneFixtures::TOWN_REF.$faker->numberBetween(1, CommuneFixtures::NBR_TOWN)));
 
             $manager->persist($inter);
 

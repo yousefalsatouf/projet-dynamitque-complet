@@ -25,9 +25,9 @@ class PrestataireFixtures extends Fixture implements DependentFixtureInterface
                  ->setEMailContact("info@".$pres->getNom().".com")
                  ->setNumTVA($faker->numberBetween(0, 100))
                  ->setSiteInternet("www.".$pres->getNom().".com")
-                 ->setLocalite($this->getReference(LocaliteFixtures::AREA_REF.$faker->numberBetween(0, localiteFixtures::NBR_AREA)))
-                 ->setCodePostal($this->getReference(CodePostalFixtures::CP_REF.$faker->numberBetween(0, codePostalFixtures::NBR_CP)))
-                 ->setCommune($this->getReference(CommuneFixtures::TOWN_REF.$faker->numberBetween(0, CommuneFixtures::NBR_TOWN)))
+                 ->setLocalite($this->getReference(LocaliteFixtures::AREA_REF.$faker->numberBetween(1, localiteFixtures::NBR_AREA)))
+                 ->setCodePostal($this->getReference(CodePostalFixtures::CP_REF.$faker->numberBetween(1, codePostalFixtures::NBR_CP)))
+                 ->setCommune($this->getReference(CommuneFixtures::TOWN_REF.$faker->numberBetween(1, CommuneFixtures::NBR_TOWN)))
                  ->addCategorieDeService($this->getReference(CategorieDeServicesFixtures::SER_CAT_REF.$faker->numberBetween(0,CategorieDeServicesFixtures::NBR_SER_CAT)));
 
             $manager->persist($pres);
